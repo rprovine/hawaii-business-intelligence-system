@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hbi-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-hbi_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-your_secure_password}
+      POSTGRES_DB: ${DB_NAME:-hawaii_business_intel}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-hbi_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hbi-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-hawaii_business_intel}
+      - DB_USER=${DB_USER:-hbi_user}
+      - DB_PASSWORD=${DB_PASSWORD:-your_secure_password}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hbi-frontend
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: npm start
+
+  data-collector:
+    build:
+      context: ./data-collectors
+      dockerfile: Dockerfile
+    container_name: hbi-data-collector
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-hawaii_business_intel}
+      - DB_USER=${DB_USER:-hbi_user}
+      - DB_PASSWORD=${DB_PASSWORD:-your_secure_password}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY}
+      - SCRAPER_DELAY=2
+      - MAX_CONCURRENT_SCRAPERS=3
+    volumes:
+      - ./data-collectors:/app
+    command: python scheduler.py
+
+  redis:
+    image: redis:7-alpine
+    container_name: hbi-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  nginx:
+    image: nginx:alpine
+    container_name: hbi-nginx
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

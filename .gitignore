@@ -1,0 +1,170 @@
+# Environment variables
+.env
+.env.local
+.env.production
+.env.staging
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+api.log
+backend.log
+frontend.log
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# React build
+frontend/build/
+frontend/dist/
+
+# Dependencies
+package-lock.json
+yarn.lock
+
+# Docker
+.dockerignore
+
+# Database
+*.sqlite
+*.db
+
+# Backup files
+*.bak
+*.backup
+backups/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# AI/ML models (if any)
+models/
+*.pkl
+*.model
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+ssl/
+
+# Production config
+docker-compose.prod.yml
+docker-compose.production.yml
+
+# Alembic
+alembic.ini.bak
+
+# MacOS
+.AppleDouble
+.LSOverride
+
+# Windows
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Testing
+.coverage
+.pytest_cache/
+coverage/
+.nyc_output/
+
+# Misc
+*.tgz
+*.tar.gz
+*.zip
+*.rar
