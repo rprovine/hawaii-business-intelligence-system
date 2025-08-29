@@ -3,9 +3,19 @@
 # Hawaii Business Intelligence System - Startup Script
 echo "🌺 Starting Hawaii Business Intelligence System..."
 
-# Set default environment variables if not provided
-export PYTHONPATH=/app:${PYTHONPATH}
+# Set Python path to include the backend directory
+export PYTHONPATH=/app:/app/backend:${PYTHONPATH}
 export PYTHONUNBUFFERED=1
+
+# Change to backend directory if not already there
+if [ -d "/app/backend" ]; then
+    cd /app/backend
+elif [ -d "backend" ]; then
+    cd backend
+fi
+
+echo "Current directory: $(pwd)"
+echo "Python path: $PYTHONPATH"
 
 # Wait for database if DATABASE_URL is set
 if [ ! -z "$DATABASE_URL" ]; then

@@ -2,6 +2,7 @@ services:
   - type: web
     name: hawaii-business-intelligence-api
     runtime: python
+    rootDir: backend
     buildCommand: pip install -r requirements.txt && chmod +x start.sh
     startCommand: ./start.sh
     envVars:
