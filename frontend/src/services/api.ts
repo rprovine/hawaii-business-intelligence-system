@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// Use Vercel API endpoints instead of Supabase to avoid auth issues
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  'https://hawaii-business-intelligence-system.vercel.app/api';
+// Use relative API path when deployed on Vercel
+const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
