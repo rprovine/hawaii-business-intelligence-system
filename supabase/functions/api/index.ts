@@ -76,6 +76,48 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
 
+      case '/analytics/by-island':
+        const { data: byIsland } = await supabase
+          .from('companies')
+          .select('island')
+        
+        const islandCounts = byIsland?.reduce((acc: any, company: any) => {
+          acc[company.island] = (acc[company.island] || 0) + 1
+          return acc
+        }, {})
+        
+        return new Response(JSON.stringify(islandCounts || {}), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+
+      case '/analytics/by-industry':
+        const { data: byIndustry } = await supabase
+          .from('companies')
+          .select('industry')
+        
+        const industryCounts = byIndustry?.reduce((acc: any, company: any) => {
+          acc[company.industry] = (acc[company.industry] || 0) + 1
+          return acc
+        }, {})
+        
+        return new Response(JSON.stringify(industryCounts || {}), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+
+      case '/workflows/status':
+        return new Response(JSON.stringify({
+          active: 0,
+          completed: 0,
+          failed: 0
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+
+      case '/interactions':
+        return new Response(JSON.stringify([]), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+
       default:
         return new Response(JSON.stringify({ error: 'Not found' }), {
           status: 404,
