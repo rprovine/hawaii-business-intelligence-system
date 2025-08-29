@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-// Use Supabase Edge Function URL directly (fallback if env vars not working)
+// Use Vercel API endpoints instead of Supabase to avoid auth issues
 const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  'https://giefuhaiojygbtnenbph.supabase.co/functions/v1/api';
+  'https://hawaii-business-intelligence-system.vercel.app/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZWZ1aGFpb2p5Z2J0bmVuYnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUwOTU2MDAsImV4cCI6MjA1MDY3MTYwMH0.PQKXo1O8pz83cTMFOxbGvnpvzFMbI9Z97WdP2wbXgvQ',
-    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZWZ1aGFpb2p5Z2J0bmVuYnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUwOTU2MDAsImV4cCI6MjA1MDY3MTYwMH0.PQKXo1O8pz83cTMFOxbGvnpvzFMbI9Z97WdP2wbXgvQ'
   },
 });
 
