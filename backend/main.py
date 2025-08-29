@@ -3,7 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 import os
+import sys
 from dotenv import load_dotenv
+
+# Add current directory to Python path for imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
 from api.routes import simple_prospects, simple_prospects_fixed, companies, simple_analytics, interactions, workflows, test_data
 from models.database import engine, Base
