@@ -18,7 +18,12 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, supabaseKey)
 
   const url = new URL(req.url)
-  const path = url.pathname.replace('/api', '')
+  // Get the full pathname for debugging
+  const fullPath = url.pathname
+  
+  // Remove everything up to and including 'api' to get the route
+  const pathMatch = fullPath.match(/\/api(.*)$/)
+  const path = pathMatch ? (pathMatch[1] || '/') : '/'
 
   try {
     // Route handling
