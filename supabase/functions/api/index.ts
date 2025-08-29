@@ -119,6 +119,36 @@ serve(async (req) => {
         })
 
       default:
+        // Handle dynamic routes like /prospects/{id}
+        if (path.startsWith('/prospects/')) {
+          const prospectId = path.split('/')[2]
+          if (prospectId) {
+            const { data: prospectData } = await supabase
+              .from('prospects')
+              .select('*, companies(name, island, industry, website, employee_count_estimate)')
+              .eq('id', prospectId)
+              .single()
+            
+            if (prospectData) {
+              // Transform the data to match frontend expectations
+              const transformedProspect = {
+                ...prospectData,
+                company: prospectData.companies,
+                company_name: prospectData.companies?.name,
+                companies: undefined
+              }
+              
+              return new Response(JSON.stringify(transformedProspect), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+              })
+            } else {
+              return new Response(JSON.stringify({ error: 'Prospect not found' }), {
+                status: 404,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+              })
+            }
+          }
+        }
         return new Response(JSON.stringify({ error: 'Not found' }), {
           status: 404,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
