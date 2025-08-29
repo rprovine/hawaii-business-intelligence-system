@@ -3,19 +3,14 @@
 # Hawaii Business Intelligence System - Startup Script
 echo "🌺 Starting Hawaii Business Intelligence System..."
 
-# Set Python path to include the backend directory
-export PYTHONPATH=/app:/app/backend:${PYTHONPATH}
+# Set Python path to include current directory (we're already in /app/backend)
+export PYTHONPATH=.:${PYTHONPATH}
 export PYTHONUNBUFFERED=1
-
-# Change to backend directory if not already there
-if [ -d "/app/backend" ]; then
-    cd /app/backend
-elif [ -d "backend" ]; then
-    cd backend
-fi
 
 echo "Current directory: $(pwd)"
 echo "Python path: $PYTHONPATH"
+echo "Directory contents:"
+ls -la
 
 # Wait for database if DATABASE_URL is set
 if [ ! -z "$DATABASE_URL" ]; then
