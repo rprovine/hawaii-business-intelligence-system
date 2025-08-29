@@ -19,17 +19,24 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Database setup
+# Database setup - Railway provides DATABASE_URL
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Railway's postgres URLs need to be updated to postgresql
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Create engine with proper configuration
+# Also check for Railway's specific database URL format
+if not DATABASE_URL:
+    # Try Railway's PostgreSQL URL pattern
+    DATABASE_URL = os.getenv("DATABASE_PRIVATE_URL") or os.getenv("DATABASE_PUBLIC_URL")
+    
 if DATABASE_URL:
-    engine = create_engine(DATABASE_URL)
+    logger.info(f"Connecting to database...")
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=300)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 else:
-    # Use SQLite for local development
+    logger.warning("No DATABASE_URL found, using SQLite")
     engine = create_engine("sqlite:///./test.db")
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -109,7 +116,20 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    """Health check endpoint for Railway"""
+    try:
+        # Test database connection
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+    
+    return {
+        "status": "healthy",
+        "database": db_status,
+        "environment": "production" if DATABASE_URL else "development"
+    }
 
 @app.get("/api/analytics/dashboard")
 async def dashboard(db: Session = Depends(get_db)):
