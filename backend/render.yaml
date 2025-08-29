@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: hawaii-business-intelligence-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hawaii-bi-db
+          property: connectionString
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: https://hawaii-business-intelligence.vercel.app,http://localhost:3000
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GOOGLE_PLACES_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+databases:
+  - name: hawaii-bi-db
+    databaseName: hawaii_business_intelligence
+    plan: free
