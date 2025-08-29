@@ -8,6 +8,8 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZWZ1aGFpb2p5Z2J0bmVuYnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NzE1MjQsImV4cCI6MjA1MDA0NzUyNH0.nYGgXRXs6v6zN8GKfOUkW_dJF24JojK2H5fCEDVR-hQ'}`,
+    'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZWZ1aGFpb2p5Z2J0bmVuYnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NzE1MjQsImV4cCI6MjA1MDA0NzUyNH0.nYGgXRXs6v6zN8GKfOUkW_dJF24JojK2H5fCEDVR-hQ'
   },
 });
 
