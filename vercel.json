@@ -1,9 +1,9 @@
 {
   "name": "hawaii-business-intelligence-frontend",
-  "framework": "vite",
+  "framework": "create-react-app",
   "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "frontend/build",
   "installCommand": "cd frontend && npm install",
-  "devCommand": "cd frontend && npm run dev",
-  "root": "frontend"
+  "devCommand": "cd frontend && npm start",
+  "root": "."
 }
