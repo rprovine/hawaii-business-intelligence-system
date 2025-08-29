@@ -283,4 +283,12 @@ async def get_interactions():
 # Run the app if called directly
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+    port = int(os.getenv("PORT", 8000))
+    logger.info(f"Starting server on port {port}")
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+    except Exception as e:
+        logger.error(f"Failed to start server: {e}")
+        # Exit gracefully
+        import sys
+        sys.exit(1)
