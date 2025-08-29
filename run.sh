@@ -2,15 +2,21 @@
 # Root-level startup script for Render deployment
 
 echo "Starting Hawaii Business Intelligence System API..."
+echo "Initial directory: $(pwd)"
+echo "Directory contents:"
+ls -la
 
 # Change to backend directory
-cd backend
+cd backend || exit 1
+
+echo "After cd backend:"
+echo "Current directory: $(pwd)"
+echo "Backend contents:"
+ls -la
 
 # Set Python path
 export PYTHONPATH=$(pwd):${PYTHONPATH}
-
-echo "Current directory: $(pwd)"
 echo "Python path: $PYTHONPATH"
 
 # Start the FastAPI application
-exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+exec python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
