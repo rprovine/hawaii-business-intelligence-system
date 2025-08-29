@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 // Use relative API path when deployed on Vercel
-const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
-console.log('API Base URL:', API_BASE_URL);
+// Force using /api to avoid any cached environment variables
+const API_BASE_URL = '/api';
+console.log('API Base URL (forced to /api):', API_BASE_URL);
+console.log('Environment API URL was:', process.env.REACT_APP_API_URL);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,6 +14,17 @@ const api = axios.create({
   timeout: 10000, // 10 second timeout
 });
 
+// Add request interceptor for debugging
+api.interceptors.request.use(
+  (config) => {
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Add response interceptor for debugging
 api.interceptors.response.use(
   (response) => {
@@ -19,7 +32,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('API Error:', error.config?.url, error.message);
+    console.error('API Error:', error.config?.url, error.message, error.response?.status);
     return Promise.reject(error);
   }
 );
