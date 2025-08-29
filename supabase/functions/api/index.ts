@@ -62,9 +62,17 @@ serve(async (req) => {
       case '/prospects':
         const { data: prospectsData } = await supabase
           .from('prospects')
-          .select('*, companies(name)')
+          .select('*, companies(name, island, industry)')
         
-        return new Response(JSON.stringify(prospectsData || []), {
+        // Transform the data to match frontend expectations
+        const transformedProspects = prospectsData?.map(prospect => ({
+          ...prospect,
+          company: prospect.companies,  // Rename companies to company
+          company_name: prospect.companies?.name,  // Add company_name field
+          companies: undefined  // Remove the original companies field
+        }))
+        
+        return new Response(JSON.stringify(transformedProspects || []), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
 
