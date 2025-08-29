@@ -30,7 +30,16 @@ const Dashboard: React.FC = () => {
   });
 
   if (isLoading) return <div className="flex items-center justify-center h-64">Loading dashboard...</div>;
-  if (error) return <div className="text-red-600">Error loading dashboard</div>;
+  if (error) {
+    console.error('Dashboard error:', error);
+    return (
+      <div className="text-red-600 p-4">
+        <p>Error loading dashboard</p>
+        <pre className="mt-2 text-sm">{JSON.stringify(error, null, 2)}</pre>
+        <p className="mt-4">API URL: {process.env.REACT_APP_API_URL || '/api'}</p>
+      </div>
+    );
+  }
 
   const stats = [
     {
