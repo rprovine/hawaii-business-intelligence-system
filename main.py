@@ -6,10 +6,13 @@ import sys
 import os
 
 # Add backend directory to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'backend'))
+backend_path = os.path.join(os.path.dirname(__file__), 'backend')
+sys.path.insert(0, backend_path)
 
-# Import the actual app
-from backend.main import app
+# Now import main from the backend directory (which is now in the path)
+import main
 
-# Export app for uvicorn
+# Export the app
+app = main.app
+
 __all__ = ['app']
