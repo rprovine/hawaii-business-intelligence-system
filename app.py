@@ -20,6 +20,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Database setup - Railway provides DATABASE_URL
+# Log all database-related env vars for debugging
+logger.info("=== Environment Variables ===")
+for key in os.environ:
+    if 'DATABASE' in key or 'POSTGRES' in key or 'DB' in key:
+        # Don't log the full URL for security, just the key
+        logger.info(f"{key}: {'[SET]' if os.getenv(key) else '[NOT SET]'}")
+
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Railway's postgres URLs need to be updated to postgresql
@@ -32,9 +39,20 @@ if not DATABASE_URL:
     DATABASE_URL = os.getenv("DATABASE_PRIVATE_URL") or os.getenv("DATABASE_PUBLIC_URL")
     
 if DATABASE_URL:
-    logger.info(f"Connecting to database...")
-    engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=300)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    logger.info(f"Connecting to database (URL found)")
+    try:
+        engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=300)
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        # Test connection
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        logger.info("Database connection successful")
+    except Exception as e:
+        logger.error(f"Database connection failed: {e}")
+        # Fall back to SQLite
+        logger.warning("Falling back to SQLite")
+        engine = create_engine("sqlite:///./test.db")
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 else:
     logger.warning("No DATABASE_URL found, using SQLite")
     engine = create_engine("sqlite:///./test.db")
@@ -51,6 +69,7 @@ def get_db():
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Hawaii Business Intelligence System API")
+    logger.info(f"Running on port: {os.getenv('PORT', 'not set')}")
     
     # Create tables if they don't exist
     try:
