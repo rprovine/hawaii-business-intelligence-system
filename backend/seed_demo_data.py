@@ -22,6 +22,9 @@ load_dotenv()
 
 # Database connection
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://hbi_user:your_secure_password@localhost:5432/hawaii_business_intel")
+# Handle Render's postgres:// URL format
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
