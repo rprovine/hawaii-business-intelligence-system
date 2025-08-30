@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 
 import Layout from './components/Layout';
+import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import Prospects from './pages/Prospects';
 import ProspectDetail from './pages/ProspectDetail';
@@ -23,15 +24,20 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/prospects" element={<Prospects />} />
-            <Route path="/prospects/:id" element={<ProspectDetail />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/workflows" element={<Workflows />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/*" element={
+            <Layout>
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/prospects" element={<Prospects />} />
+                <Route path="/prospects/:id" element={<ProspectDetail />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/workflows" element={<Workflows />} />
+              </Routes>
+            </Layout>
+          } />
+        </Routes>
       </Router>
       <Toaster 
         position="top-right"
