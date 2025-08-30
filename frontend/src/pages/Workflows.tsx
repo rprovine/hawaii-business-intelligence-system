@@ -178,11 +178,18 @@ const Workflows: React.FC = () => {
                         LinkedIn
                       </button>
                       <button
-                        onClick={() => handleTriggerWorkflow('scrape', 'news')}
+                        onClick={() => handleTriggerWorkflow('scrape', 'pbn')}
                         disabled={triggerMutation.isLoading}
                         className="px-3 py-1 bg-white text-ocean-600 border border-ocean-600 rounded text-sm hover:bg-ocean-50"
                       >
-                        News
+                        Pacific Business News
+                      </button>
+                      <button
+                        onClick={() => handleTriggerWorkflow('scrape', 'custom')}
+                        disabled={triggerMutation.isLoading}
+                        className="px-3 py-1 bg-white text-ocean-600 border border-ocean-600 rounded text-sm hover:bg-ocean-50 col-span-2"
+                      >
+                        Custom Webscrape
                       </button>
                     </div>
                   </div>
